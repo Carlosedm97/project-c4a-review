@@ -13,7 +13,7 @@ def dbConnection(): #Función de conexión
     dataConfig = loadConfigFile()
     try:
         client = MongoClient(dataConfig['MONGO_URI_SERVER'], tlsCAFile = ca) # Conexión con atlas
-        client = MongoClient(dataConfig['MONGO_URI_LOCAL'], dataConfig['LOCAL_PORT']) # Conexión local
+        # client = MongoClient(dataConfig['MONGO_URI_LOCAL'], dataConfig['LOCAL_PORT']) # Conexión local
         db = client["project_c4a_review"]
     except ConnectionError:
         print("Error de conexión con la base de datos.")
