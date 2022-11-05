@@ -4,16 +4,12 @@ import certifi
 
 ca = certifi.where() 
 
-#Cargar el archivo de configuración.
-
-def loadConfigFile():
+def loadConfigFile(): #Cargar el archivo de configuración.
     with open('database/config.json') as f:
         data = json.load(f)
     return data
 
-#Función de conexión
-
-def dbConnection():
+def dbConnection(): #Función de conexión
     dataConfig = loadConfigFile()
     try:
         client = MongoClient(dataConfig['MONGO_URI_SERVER'], tlsCAFile = ca) # Conexión con atlas
