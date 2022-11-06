@@ -9,7 +9,7 @@ T = TypeVar('T')
 class IntefazRepositorio(Generic[T]):
     def __inti__(self): # Constructor de la clase.
         self.db = dbase.dbConnection()
-        theClass = get_args(self.__orig_bases_[0])
+        theClass = get_args(self.__orig_bases__[0])
         self.collection = theClass[0].__name__.lower()
 
     def getValuesDBRefFromList(self, theList): # Función que obtiene los valores de referencia de una lista.
