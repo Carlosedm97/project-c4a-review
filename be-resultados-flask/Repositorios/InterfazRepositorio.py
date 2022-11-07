@@ -6,8 +6,9 @@ import database.database as dbase
 
 T = TypeVar('T')
 
-class IntefazRepositorio(Generic[T]):
-    def __inti__(self): # Constructor de la clase.
+class InterfazRepositorio(Generic[T]):
+    
+    def __init__(self): # Constructor de la clase.
         self.db = dbase.dbConnection()
         theClass = get_args(self.__orig_bases__[0])
         self.collection = theClass[0].__name__.lower()

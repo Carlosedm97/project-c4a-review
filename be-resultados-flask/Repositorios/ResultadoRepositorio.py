@@ -1,8 +1,8 @@
-from Repositorios.InterfazRepositorio import IntefazRepositorio
+from Repositorios.InterfazRepositorio import InterfazRepositorio
 from Modelos.Resultado import Resultado
 from bson import ObjectId
 
-class ResultadoRepositorio(IntefazRepositorio(Resultado)):
+class ResultadoRepositorio(InterfazRepositorio[Resultado]):
     def getListadoCandidatosInscritosMesa(self, id_mesa): # Me da las votaciones por mesa.
         theQuery = {"mesa.$id": ObjectId(id_mesa)}
         return self.query(theQuery)

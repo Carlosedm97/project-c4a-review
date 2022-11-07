@@ -1,5 +1,5 @@
-from Repositorios.InterfazRepositorio import IntefazRepositorio
+from Repositorios.InterfazRepositorio import InterfazRepositorio
 from Modelos.Partido import Partido
 
-class PartidoRepositorio(IntefazRepositorio(Partido)):
+class PartidoRepositorio(InterfazRepositorio[Partido]):
     pass
