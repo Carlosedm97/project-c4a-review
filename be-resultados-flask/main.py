@@ -5,11 +5,20 @@ from flask_cors import CORS
 app = Flask(__name__)
 cors = CORS(app)
 
+# Variables globales.
+
 from Controladores.PartidoControlador import PartidoControlador
 miControladorPartido = PartidoControlador()
 
 from Controladores.CandidatoControlador import CandidatoControlador
 miControladorCandidato = CandidatoControlador()
+
+from Controladores.MesaControlador import MesaControlador
+miControladorMesa = MesaControlador()
+
+from Controladores.ResultadoControlador import ResultadoControlador
+miControladorResultado = ResultadoControlador()
+
 
 # EndPoints Partido.
 
@@ -73,6 +82,85 @@ def eliminarCandidato(id):
 def asignarPartidoACandidato(id,id_partido):
     json = miControladorCandidato.asignarPartido(id,id_partido)
     return jsonify(json)
+
+# EndPoints Mesa.
+
+@app.route("/mesas", methods=['POST']) # Metodo para crear una mesa.
+def crearMesa():
+    data = request.get_json()
+    json = miControladorMesa.create(data)
+    return jsonify(json)
+
+@app.route("/mesas", methods=['GET']) # Metodo para listar todas las mesas.
+def getMesas():
+    json = miControladorMesa.index()
+    return jsonify(json)
+
+@app.route("/mesas/<string:id>", methods=['GET']) # Metodo para listar una mesa.
+def getMesa(id):
+    json = miControladorMesa.show(id)
+    return jsonify(json)
+
+@app.route("/mesas/<string:id>", methods=['PUT']) # Metodo para actualizar una mesa.
+def modificarMesa(id):
+    data = request.get_json()
+    json = miControladorMesa.update(id, data)
+    return jsonify(json)
+
+@app.route("/mesas/<string:id>", methods=['DELETE']) # Metodo para eliminar una mesa.
+def eliminarMesa(id):
+    json = miControladorMesa.delete(id)
+    return jsonify(json)
+
+# EndPoints Resultados.
+
+@app.route("/resultados/mesa/<string:id_mesa>/candidato/<string:id_candidato>", methods=['POST']) # Metodo para crear un resultado.
+def crearResultado(id_mesa, id_candidato):
+    data = request.get_json()
+    json = miControladorResultado.create(data, id_mesa, id_candidato)
+    return jsonify(json)
+
+@app.route("/resultados", methods=['GET']) # Metodo para listar todos los resultados.
+def getResultados():
+    json = miControladorResultado.index()
+    return jsonify(json)
+
+@app.route("/resultados/<string:id>", methods=['GET']) # Metodo para listar un resultado.
+def getResultado(id):
+    json = miControladorResultado.show(id)
+    return jsonify(json)
+
+@app.route("/resultados/<string:id>/mesa/<string:id_mesa>/candidato/<string:id_candidato>", methods=['PUT']) # Metodo para actualizar un resultado.
+def modificarResultado(id, id_mesa, id_candidato):
+    data = {}
+    json = miControladorResultado.update(id, data, id_mesa, id_candidato)
+    return jsonify(json)
+
+@app.route("/resultados/<string:id>", methods=['DELETE']) #Metodo para eliminar un resultado.
+def eliminarResultado(id):
+    json = miControladorResultado.delete(id)
+    return jsonify(json)
+
+@app.route("/resultados/candidato/<string:id_candidato>",methods=['GET'])
+def resultadosDeCandidatos(id_candidato):
+    json=miControladorResultado.listarResultadoDeCandidato(id_candidato)
+    return jsonify(json)
+
+@app.route("/resultados/mesa/<string:id_mesa>", methods=["GET"]) # Metodo para buscar los candidatos votados en una mesa.
+def inscritosMesa(id_mesa):
+    json = miControladorResultado.getListarCandidatosMesa(id_mesa)
+    return jsonify(json)
+
+@app.route("/resultados/mesas/<string:id_candidato>", methods=["GET"]) # Metodo para buscar el candidato en las mesas.
+def inscritoEnMesas(id_candidato):
+    json = miControladorResultado.getListarMesasDeInscritoCandidato(id_candidato)
+    return jsonify(json)
+
+@app.route("/resultados/maxdocument", methods=["GET"]) # Metodo para buscar mayor cédula
+def getMaxDocument():
+    json = miControladorResultado.getMayorCedula()
+    return jsonify(json)
+
 
 # Prueba del servicio.
 
