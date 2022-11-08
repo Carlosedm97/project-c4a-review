@@ -24,5 +24,3 @@ class PartidoControlador():
 
     def delete(self,id): # Elimina un documento.
         return self.repositorioPartido.delete(id)
-
-# 5:13:38

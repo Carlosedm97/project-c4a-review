@@ -26,7 +26,7 @@ class InterfazRepositorio(Generic[T]):
         keys = x.keys()
         for k in keys:
             if isinstance(x[k], DBRef):
-                laColeccion = self.db(x[k].collection)
+                laColeccion = self.db[x[k].collection]
                 valor = laColeccion.find_one({"_id": ObjectId(x[k].id)})
                 valor["_id"] = valor["_id"].__str__()
                 x[k] = valor
@@ -83,12 +83,12 @@ class InterfazRepositorio(Generic[T]):
         item = item.__dict__
         updateItem = {"$set": item}
         x = laColeccion.update_one({"_id":_id}, updateItem)
-        return {"update_count":x.matched_count}
+        return {"updated_count":x.matched_count}
 
     def delete(self, id): # Función para eliminar.
         laColeccion = self.db[self.collection]
-        cuenta = laColeccion.delete_one({"_id": ObjectId(id)}).delete_count
-        return {"delete_count": cuenta}
+        cuenta = laColeccion.delete_one({"_id": ObjectId(id)}).deleted_count
+        return {"deleted_count": cuenta}
 
     def ObjectToDBRef(self, item: T): # Función para obtener los objetos desde una referencia DBRef.
         nameCollection = item.__class__.__name__.lower()
@@ -101,7 +101,7 @@ class InterfazRepositorio(Generic[T]):
             if theDict[k].__str__().count("object") == 1:
                 newObject = self.ObjectToDBRef(getattr(item, k))
                 setattr(item, k, newObject)
-            return item
+        return item
     
     def save(self, item: T): # Función para guardar.
         laColeccion = self.db[self.collection]
@@ -112,7 +112,7 @@ class InterfazRepositorio(Generic[T]):
             _id = ObjectId(elId)
             laColeccion = self.db[self.collection]
             delattr(item, "_id")
-            item =item.__dict__
+            item = item.__dict__
             updateItem = {"$set":item}
             x = laColeccion.update_one({"_id": _id}, updateItem)
         else:
@@ -138,6 +138,6 @@ class InterfazRepositorio(Generic[T]):
         for x in laColeccion.aggregate(theQuery):
             x["_id"] = x["_id"].__str__()
             x = self.transformObjectIds(x)
-            self.getValuesDBRef(x)
+            x = self.getValuesDBRef(x)
             data.append(x)
         return data
